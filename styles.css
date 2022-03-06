@@ -1,0 +1,36 @@
+.box {
+  border: 1px solid gray;
+  width: 50px;
+  height: 50px;
+  flex: 1 1 auto;
+  display: inline-block;
+}
+
+/* .gridRow {
+  flex: 1 1 auto;
+  width: ;
+} */
+body {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  height: 100vh;
+}
+
+#start {
+  transform: scale(3);
+  margin-bottom: 25px;
+}
+
+#grid {
+  display: flex;
+  border: 5px solid red;
+  width: 960px;
+  height: 960px;
+  
+}
+
+.hover {
+  background-color: black;
+}
