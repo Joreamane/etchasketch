@@ -1,41 +1,63 @@
-const container = document.getElementById('grid')
-let rows = document.getElementsByClassName('gridRow')
-let cells = document.getElementsByClassName('box')
-allCells = Array.from(cells)
-let rowNum = ''
+const grid = document.getElementById('grid')
+const setup = document.getElementById('setup')
+const eraser = document.getElementById('eraser')
+const color = document.getElementById('colorMode')
+let colorChoice = document.getElementById('colorPicker')
+let size = document.getElementById('inputNum').value
 
-function defaultGrid() {
-  clearGrid()
-  dimensions()
-  makeRows(axisLength)
-  makeColumns(axisLength)
-}
+let currentMode = 'color'
+let currentColor = 'black'
 
-function makeRows(rowNum) {
-  for (r=0; r<rowNum; r++) {
-    let row = document.createElement('div')
-    container.appendChild(row).className = 'gridRow'
-  }
-}
-
-function makeColumns(rowNum) {
-  for (i = 0; i < rows.length; i++) {
-    for (j = 0; j < rowNum; j++) {
-      let newCell = document.createElement('div')
-      rows[j].appendChild(newCell).className = 'box'
-      newCell.addEventListener('mouseover', function(e) {
-        e.target.style.background = 'black'
-      })
-    }
-  }
-}
+// This allows us to tell the page to register holding mousedown as a constant thing, instead just a single mousedown event
+let mousedown = false
+document.body.onmousedown = () => (mousedown = true)
+document.body.onmouseup = () => (mousedown = false)
 
 function clearGrid() {
-  while(container.firstChild) {
-    container.firstChild.remove()
+  while(grid.firstChild) {
+    grid.firstChild.remove()
+  }
+}
+function reset() {
+  clearGrid()
+  setupGrid(inputNum.value)
+}
+function setupGrid(size) {
+  clearGrid()
+  grid.style.gridTemplateColumns = `repeat(${size}, 1fr)`
+  grid.style.gridTemplateRows = `repeat(${size}, 1fr)`
+  for(let i=0; i<Math.pow(size, 2); i++) {
+    const gridElement = document.createElement('div')
+    gridElement.classList.add('box')
+    gridElement.addEventListener('mouseover', changeColor)
+    gridElement.addEventListener('mousedown', changeColor)
+    grid.appendChild(gridElement)
   }
 }
 
-function dimensions() {
-  axisLength = prompt('What should the dimensions of the pad be? Whole integers only!', '16')
+function changeColor(e) {
+  if(e.type === 'mouseover' && !mousedown) return
+  if(currentMode === 'color') {
+    e.target.style.backgroundColor = currentColor
+  } else if (currentMode === 'erase') {
+    e.target.style.backgroundColor = 'white'
+  }
 }
+color.addEventListener('click', function() {
+  currentMode = 'color'
+})
+
+eraser.addEventListener('click', function(){
+  currentMode = 'erase'
+})
+color.addEventListener('click', function(){
+  currentMode = 'color'
+})
+function setColor(newColor) {
+  currentColor = newColor
+}
+colorChoice.onchange = (e) => setColor(e.target.value)
+
+document.getElementById('reset').addEventListener('click', function() {
+  reset(size)
+})
